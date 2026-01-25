@@ -2,17 +2,22 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>MP3 Test</title>
+  <title>visi voice samplert</title>
 </head>
 <body>
 
-<button onclick="play()">再生</button>
+<h1>visi voice sampler</h1>
 
-<audio id="audio" src="maji.mp3"></audio>
+<hr />
+
+<button onclick="play('maji.mp3')">maji?</button>
+<button onclick="play('maji.mp3')">maji?</button>
+<button onclick="play('maji.mp3')">maji?</button>
 
 <script>
-function play() {
-  document.getElementById("audio").play();
+function play(src) {
+  const audio = new Audio(src);
+  audio.play();
 }
 </script>
 
