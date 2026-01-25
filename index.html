@@ -21,18 +21,31 @@
     }
     
     button {
-    font-size: 16px;      /* 文字サイズUP */
-    padding: 10px 16px;   /* ボタン自体を大きく */
-    margin: 6px;          /* 他ボタンとの間隔 */
-    cursor: pointer;      /* マウスカーソル */
+     font-size: 16px;      /* 文字サイズUP */
+     padding: 10px 16px;   /* ボタン自体を大きく */
+     margin: 6px;          /* 他ボタンとの間隔 */
+     cursor: pointer;      /* マウスカーソル */
+    
+  /* ↓ ここが超重要（iOS Safari対策） */
+     background-color: #f0f0f0;
+     border: 1px solid #999;
+     border-radius: 6px;
+
+     -webkit-appearance: button;
+     appearance: button;
     }
-  
+    
+    button:active {
+     background-color: #ddd;
+    }
+
     .sound-btn {
       font-size: 14px;
       padding: 8px 12px;
       margin: 4px;
       cursor: pointer;
     }
+
   </style>
 <body>
 
