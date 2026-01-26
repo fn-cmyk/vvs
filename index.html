@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>visi voice samplert</title>
-</head>
+  
   <style>
     h1 {
       color: #333;
@@ -47,12 +47,18 @@
     }
 
   </style>
+</head>
 <body>
 
 <h1 class="title">
   <img src="icon.png" alt="" class="icon">
   visi voice sampler
 </h1>
+
+<label>
+  <input type="checkbox" id="echoToggle">
+  echo on
+</label>
 
 <hr />
 
@@ -344,10 +350,54 @@
 
 <button class="sound-btn" onclick="play('rusi.mp3')">ルーシー</button>
 
+<audio id="audio"></audio>
 
 <script>
+const audio  = document.getElementById("audio");
+const toggle = document.getElementById("echoToggle");
+
+// AudioContext（iOS Safari対応）
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+// audio → WebAudio
+const source = ctx.createMediaElementSource(audio);
+
+// ===== 原音（dry） =====
+const dryGain = ctx.createGain();
+dryGain.gain.value = 1.0;
+
+// ===== エコー（wet） =====
+const delay = ctx.createDelay();
+delay.delayTime.value = 0.25;
+
+const feedback = ctx.createGain();
+feedback.gain.value = 0.4;
+
+const wetGain = ctx.createGain();
+wetGain.gain.value = 0.0; // 最初はOFF
+
+// ===== 接続 =====
+// 原音
+source.connect(dryGain);
+dryGain.connect(ctx.destination);
+
+// エコー
+source.connect(delay);
+delay.connect(feedback);
+feedback.connect(delay);
+delay.connect(wetGain);
+wetGain.connect(ctx.destination);
+
+// ===== チェックでON / OFF =====
+toggle.addEventListener("change", () => {
+  wetGain.gain.value = toggle.checked ? 1.0 : 0.0;
+});
+
+// ===== 再生関数 =====
 function play(src) {
-  const audio = new Audio(src);
+  ctx.resume();          // iOS対策（必須）
+  audio.src = src;
+  audio.currentTime = 0;
   audio.play();
 }
 </script>
