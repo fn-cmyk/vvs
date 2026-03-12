@@ -62,6 +62,23 @@
 
 <hr />
 
+<h3>Combo</h3>
+
+<div id="comboSlots">
+  <button onclick="setSlot(0)">1</button>
+  <button onclick="setSlot(1)">2</button>
+  <button onclick="setSlot(2)">3</button>
+  <button onclick="setSlot(3)">4</button>
+  <button onclick="setSlot(4)">5</button>
+</div>
+
+<button onclick="playCombo()">連続再生</button>
+<button onclick="clearCombo()">クリア</button>
+
+<hr />
+
+<p id="comboView">未登録</p>
+
 <button class="sound-btn" onclick="play('maji.mp3')">マジ?</button>
 
 <button class="sound-btn" onclick="play('ok1.mp3')">OK了解</button>
@@ -469,6 +486,77 @@ function play(src) {
   audio.src = src;
   audio.currentTime = 0;
   audio.play();
+}
+
+// ===== コンボ =====
+
+let combo = [null,null,null,null,null];
+let currentSlot = 0;
+let comboIndex = 0;
+
+// スロット選択
+function setSlot(i){
+  currentSlot = i;
+}
+
+// playを拡張
+function play(src) {
+
+  ctx.resume();
+
+  // コンボ登録
+  combo[currentSlot] = src;
+  updateComboView();
+
+  audio.src = src;
+  audio.currentTime = 0;
+  audio.play();
+}
+
+// コンボ表示
+function updateComboView(){
+  const view = combo.map((v,i)=> v ? (i+1) : "_").join(" → ");
+  document.getElementById("comboView").textContent = view;
+}
+
+// 連続再生
+function playCombo(){
+
+  comboIndex = 0;
+
+  playNext();
+}
+
+function playNext(){
+
+  while(comboIndex < combo.length && combo[comboIndex] == null){
+    comboIndex++;
+  }
+
+  if(comboIndex >= combo.length) return;
+
+  audio.src = combo[comboIndex];
+  audio.currentTime = 0;
+  audio.play();
+}
+
+// 再生終了で次
+audio.addEventListener("ended", () => {
+
+  comboIndex++;
+
+  if(comboIndex < combo.length){
+    playNext();
+  }
+
+});
+
+// クリア
+function clearCombo(){
+
+  combo = [null,null,null,null,null];
+  updateComboView();
+
 }
 </script>
 
